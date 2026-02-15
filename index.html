@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ru" class="has-navbar-fixed-top">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ChibiCraft — Увлекательное кубическое приключение</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --cc-dark-bg: #0d1117;
+      --cc-darker: #161b22;
+      --cc-card-bg: #21262d;
+      --cc-border: #30363d;
+      --cc-text: #e6edf3;
+      --cc-text-muted: #8b949e;
+      --cc-accent: #58a6ff;
+      --cc-accent-hover: #79b8ff;
+      --cc-purple: #a371f7;
+      --cc-green: #3fb950;
+      --cc-gold: #d29922;
+      --bulma-scheme-main: #0d1117;
+      --bulma-navbar-background-color: transparent;
+    }
+    html { font-size: 18px; }
+    html, body { background: var(--cc-dark-bg) !important; color: var(--cc-text); }
+    body { min-height: 100vh; font-size: 1rem; }
+    .navbar,
+    .navbar-brand,
+    .navbar-menu,
+    .navbar-start,
+    .navbar-end {
+      background: transparent !important;
+      box-shadow: none !important;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+    .navbar-item, .navbar-link { color: var(--cc-text) !important; background-color: transparent !important; }
+    .navbar-item:hover, .navbar-link:hover,
+    .navbar-item:focus, .navbar-link:focus,
+    .navbar-item:active, .navbar-link:active,
+    .navbar-item.is-active, .navbar-link.is-active,
+    .navbar-item.has-dropdown:hover, .navbar-item.has-dropdown:focus,
+    .navbar-item.has-dropdown.is-active .navbar-link {
+      background: var(--cc-card-bg) !important;
+      color: var(--cc-accent) !important;
+    }
+    .navbar-brand .navbar-item { font-weight: 700; font-size: 1.25rem; }
+    .navbar-dropdown { background: var(--cc-darker) !important; border-color: var(--cc-border); }
+    .navbar-dropdown .navbar-item { color: var(--cc-text); background: transparent !important; }
+    .navbar-dropdown .navbar-item:hover { background: var(--cc-card-bg) !important; color: var(--cc-accent); }
+    .navbar-divider { background: var(--cc-border); }
+    .navbar-burger { color: var(--cc-text); }
+    .navbar-burger:hover { background: var(--cc-card-bg); color: var(--cc-accent); }
+    .navbar-burger-user {
+      color: var(--cc-text);
+      display: flex !important;
+      padding: 0.5rem 0.75rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+    .navbar-burger-user span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 1px;
+    }
+    .navbar-burger-user:hover { background: var(--cc-card-bg); color: var(--cc-accent); }
+    .navbar-item.has-dropdown:hover .navbar-dropdown,
+    .navbar-item.has-dropdown.is-active .navbar-dropdown { display: block; }
+    .navbar .navbar-item,
+    .navbar .navbar-link,
+    .navbar a.navbar-item,
+    .navbar a.navbar-link,
+    .navbar-end .navbar-item,
+    .navbar-end .navbar-link { background-color: transparent !important; }
+    .navbar .navbar-item:hover,
+    .navbar .navbar-link:hover,
+    .navbar .navbar-item:focus,
+    .navbar .navbar-link:focus,
+    .navbar-item.has-dropdown:hover .navbar-link,
+    .navbar-item.has-dropdown.is-active .navbar-link { background-color: var(--cc-card-bg) !important; }
+    .profile-dropdown-card {
+      min-width: 280px;
+      padding: 1rem;
+      background: var(--cc-card-bg);
+      border: 1px solid var(--cc-border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .profile-dropdown-card .profile-row { display: flex; gap: 0.75rem; align-items: center; }
+    .profile-dropdown-card .profile-avatar { flex-shrink: 0; }
+    .profile-dropdown-card .profile-info { flex: 1; min-width: 0; }
+    .profile-dropdown-card .profile-nickname { font-weight: 600; margin-bottom: 0.25rem; }
+    .profile-dropdown-card .profile-privilege { font-size: 0.75rem; }
+    .profile-dropdown-card .balance-row { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; }
+    .profile-dropdown-card .balance-row .button { flex-shrink: 0; margin-left: 0.5rem; }
+    .profile-dropdown-card .btn-logout { border: none !important; box-shadow: none !important; }
+    .profile-dropdown-card .btn-logout:hover { background: transparent !important; color: var(--cc-accent) !important; }
+    .navbar-dropdown.has-profile-card { padding: 0.5rem; border-radius: 8px; }
+    .navbar-profile-mobile { position: relative; }
+    /* Десктоп: dropdown при наведении — уже через is-hoverable */
+    /* Мобильный profile panel — полноэкранный контейнер */
+    .profile-mobile-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: var(--cc-dark-bg);
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      height: 100vh;
+      height: 100dvh;
+    }
+    body.profile-panel-open { overflow: hidden !important; position: fixed !important; width: 100% !important; }
+    html.profile-panel-open { overflow: hidden !important; }
+    .profile-mobile-panel.is-active { display: block; }
+    .profile-mobile-panel .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: var(--cc-darker);
+      border-bottom: 1px solid var(--cc-border);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .profile-mobile-panel .panel-close {
+      background: none;
+      border: none;
+      color: var(--cc-text);
+      cursor: pointer;
+      padding: 0.5rem;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .profile-mobile-panel .panel-close:hover { color: var(--cc-accent); }
+    .profile-mobile-panel .panel-content { padding: 1.5rem; }
+    .hero-main { background: linear-gradient(135deg, var(--cc-darker) 0%, #1a2234 50%, var(--cc-dark-bg) 100%); min-height: 420px; position: relative; overflow: hidden; }
+    .hero-main::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(88,166,255,0.03)' stroke-width='0.5'/%3E%3C/svg%3E"); opacity: 0.5; }
+    .section { background: transparent; }
+    .section-dark { background: var(--cc-darker); }
+    .box, .card { background: var(--cc-card-bg); border: 1px solid var(--cc-border); color: var(--cc-text); }
+    .card-content { color: var(--cc-text); }
+    .card-footer { background: var(--cc-darker); border-color: var(--cc-border); }
+    .title, .subtitle { color: var(--cc-text) !important; }
+    .subtitle { color: var(--cc-text-muted) !important; }
+    .button.is-primary { background: var(--cc-accent); color: #fff; }
+    .button.is-primary:hover { background: var(--cc-accent-hover); color: #fff; }
+    .badge { padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-online { background: var(--cc-green); color: #fff; }
+    .badge-tps { background: var(--cc-gold); color: #000; }
+    .server-card { position: relative; overflow: hidden; }
+    .server-card .glow { position: absolute; width: 200px; height: 200px; border-radius: 50%; filter: blur(80px); opacity: 0.3; pointer-events: none; }
+    .server-card .glow-1 { background: var(--cc-purple); top: -50px; right: -50px; }
+    .server-card .glow-2 { background: var(--cc-accent); bottom: -50px; left: -50px; }
+    .particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .particle { position: absolute; width: 4px; height: 4px; background: rgba(163, 113, 247, 0.6); border-radius: 50%; animation: float 6s ease-in-out infinite; }
+    .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 30%; top: 60%; animation-delay: 1s; }
+    .particle:nth-child(3) { left: 50%; top: 30%; animation-delay: 2s; }
+    .particle:nth-child(4) { left: 70%; top: 70%; animation-delay: 0.5s; }
+    .particle:nth-child(5) { left: 90%; top: 40%; animation-delay: 1.5s; }
+    .particle:nth-child(6) { left: 20%; top: 80%; animation-delay: 2.5s; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0); opacity: 0.6; } 50% { transform: translate(10px, -10px); opacity: 1; } }
+    .footer { background: var(--cc-darker); color: var(--cc-text-muted); }
+    .footer a { color: var(--cc-text); }
+    .footer a:hover { color: var(--cc-accent); }
+    .footer .tag { background: var(--cc-card-bg); color: var(--cc-text); }
+    .footer .tag:hover { background: var(--cc-border); color: var(--cc-accent); }
+    .post-footer { background: var(--cc-dark-bg); border-top: 1px solid var(--cc-border); font-size: 0.85rem; }
+    .post-footer .button.is-text { background: transparent; color: var(--cc-text-muted) !important; }
+    .post-footer .button.is-text:hover { background: var(--cc-card-bg); color: var(--cc-accent) !important; }
+    .news-card { display: flex; gap: 1rem; align-items: flex-start; }
+    .news-card .news-image { width: 120px; min-width: 120px; height: 80px; object-fit: cover; border-radius: 8px; }
+    @media screen and (max-width: 1023px) {
+      .navbar-menu { padding: 0.5rem; }
+      .navbar-menu.is-active { background: var(--cc-darker); border-bottom: 1px solid var(--cc-border); }
+      .navbar-start { flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem; }
+      .navbar-start .navbar-item {
+        width: 100%; justify-content: center; border-radius: 8px;
+        border: 1px solid var(--cc-border); background: var(--cc-card-bg);
+        margin: 0; padding: 0.75rem 1rem;
+      }
+      .navbar-end { flex-direction: column; gap: 0.5rem; border-top: 1px solid var(--cc-border); padding-top: 0.5rem; margin-top: 0.5rem; }
+      .navbar-end .navbar-item { padding: 0; margin: 0; width: 100%; }
+      .navbar-end .navbar-item.has-dropdown { width: 100%; }
+      .navbar-profile .navbar-burger-user {
+        width: 100%; justify-content: center; border-radius: 8px;
+        border: 1px solid var(--cc-border); background: var(--cc-card-bg);
+      }
+      .navbar-end .navbar-item .button { width: 100%; justify-content: center; }
+      .navbar-dropdown { border: 1px solid var(--cc-border); border-radius: 8px; margin-top: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar is-fixed-top" role="navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">ChibiCraft</a>
+      <!-- Кнопка навигации (главы) — видна на мобильных -->
+      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="меню навигации" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+      <!-- Кнопка профиля — отдельная, видна на мобильных, открывает полноэкранную панель -->
+      <div class="navbar-item navbar-profile-mobile is-hidden-desktop">
+        <a role="button" class="navbar-burger-user" id="profileMobileBtn" aria-label="меню профиля" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    </div>
+    <div id="navMenu" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/">Главная</a>
+        <a class="navbar-item" href="/servers">Серверы</a>
+        <a class="navbar-item" href="/shop">Магазин</a>
+        <a class="navbar-item" href="/other">Прочее</a>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable navbar-profile is-hidden-touch" id="profileDropdown">
+          <a class="navbar-link" href="/profile" id="profileDropdownTrigger">Профиль</a>
+          <div class="navbar-dropdown is-right has-profile-card">
+            <div class="profile-dropdown-card">
+              <div class="profile-row mb-3">
+                <div class="profile-avatar">
+                  <figure class="image is-40x40">
+                    <img src="https://via.placeholder.com/40/21262d/58a6ff?text=👤" alt="" class="is-rounded">
+                  </figure>
+                </div>
+                <div class="profile-info">
+                  <p class="profile-nickname">PlayerName</p>
+                  <span class="tag profile-privilege" style="background: var(--cc-gold); color: #000;">VIP</span>
+                </div>
+              </div>
+              <hr class="navbar-divider">
+              <div class="balance-row">
+                <span class="subtitle is-6 mb-0">250 ₽</span>
+                <a class="button is-primary is-small" href="/topup">Пополнить</a>
+              </div>
+              <div class="balance-row">
+                <span class="subtitle is-6 mb-0">1 500 монет</span>
+                <a class="button is-outlined is-small" href="/transfer" style="border-color: var(--cc-accent); color: var(--cc-accent);">Перевести</a>
+              </div>
+              <hr class="navbar-divider">
+              <a class="button is-primary is-fullwidth mb-2" href="/shop/privileges">Купить привилегии</a>
+              <a class="button is-fullwidth mb-2" href="/profile" style="background: var(--cc-darker); color: var(--cc-text); border: 1px solid var(--cc-border);">Личный кабинет</a>
+              <a class="button is-text is-fullwidth btn-logout" href="/logout" style="color: var(--cc-text-muted);">Выйти</a>
+            </div>
+          </div>
+        </div>
+        <div class="navbar-item is-hidden-touch">
+          <a class="button is-primary" href="/download">Скачать</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Мобильная панель профиля (полноэкранная, только по клику) -->
+  <div class="profile-mobile-panel is-hidden-desktop" id="profileMobilePanel" aria-hidden="true">
+    <div class="panel-header">
+      <h2 class="title is-5 mb-0">Профиль</h2>
+      <button type="button" class="panel-close" id="profilePanelClose" aria-label="Закрыть">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="panel-content">
+      <div class="profile-dropdown-card">
+        <div class="profile-row mb-3">
+          <div class="profile-avatar">
+            <figure class="image is-40x40">
+              <img src="https://via.placeholder.com/40/21262d/58a6ff?text=👤" alt="" class="is-rounded">
+            </figure>
+          </div>
+          <div class="profile-info">
+            <p class="profile-nickname">PlayerName</p>
+            <span class="tag profile-privilege" style="background: var(--cc-gold); color: #000;">VIP</span>
+          </div>
+        </div>
+        <hr class="navbar-divider">
+        <div class="balance-row">
+          <span class="subtitle is-6 mb-0">250 ₽</span>
+          <a class="button is-primary is-small" href="/topup">Пополнить</a>
+        </div>
+        <div class="balance-row">
+          <span class="subtitle is-6 mb-0">1 500 монет</span>
+          <a class="button is-outlined is-small" href="/transfer" style="border-color: var(--cc-accent); color: var(--cc-accent);">Перевести</a>
+        </div>
+        <hr class="navbar-divider">
+        <a class="button is-primary is-fullwidth mb-2" href="/shop/privileges">Купить привилегии</a>
+        <a class="button is-fullwidth mb-2" href="/profile" style="background: var(--cc-darker); color: var(--cc-text); border: 1px solid var(--cc-border);">Личный кабинет</a>
+        <a class="button is-text is-fullwidth btn-logout" href="/logout" style="color: var(--cc-text-muted);">Выйти</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero hero-main">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-vcentered">
+          <div class="column is-5">
+            <h1 class="title is-2 mb-4">Увлекательное<br>кубическое приключение</h1>
+            <p class="subtitle is-5 mb-4">ChibiCraft — это аниме-проект серверов с уникальными модами, где вас ждут путешествия по измерениям, технологии и магия!</p>
+            <div class="tags mb-4">
+              <span class="badge badge-online">Онлайн: 247</span>
+              <span class="badge badge-tps ml-2">TPS: 20</span>
+            </div>
+          </div>
+          <div class="column is-2 has-text-centered">
+            <a class="button is-primary is-large" href="/play">НАЧАТЬ ИГРУ</a>
+          </div>
+          <div class="column is-5">
+            <div class="box" style="margin-left: auto; max-width: 320px;">
+              <p class="has-text-weight-semibold mb-2">Последняя новость</p>
+              <p class="subtitle is-6 mb-3">Обновление 2.5: новые измерения и магические заклинания уже на серверах!</p>
+              <a class="button is-outlined" style="border-color: var(--cc-accent); color: var(--cc-accent);" href="/news">Читать новость</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Servers -->
+  <section class="section section-dark">
+    <div class="container">
+      <h2 class="title is-3 has-text-centered mb-6">Самые популярные серверы</h2>
+      <div class="columns">
+        <!-- Server 1 - HiTech -->
+        <div class="column is-6">
+          <div class="card server-card">
+            <div class="glow glow-1"></div>
+            <div class="glow glow-2"></div>
+            <div class="particles">
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+            </div>
+            <div class="card-content">
+              <div class="tags mb-3">
+                <span class="tag is-info">Моды</span>
+                <span class="tag is-success">Технологии</span>
+                <span class="tag is-warning">1.20</span>
+              </div>
+              <p class="title is-4 has-text-centered mb-3">HiTech</p>
+              <div class="has-text-centered mb-4">
+                <figure class="image is-64x64 is-inline-block">
+                  <img src="https://via.placeholder.com/64/58a6ff/0d1117?text=HT" alt="HiTech" style="border-radius: 12px;">
+                </figure>
+              </div>
+              <p class="subtitle is-6">Сервер с продвинутыми технологиями: автоматизация, роботы, космические станции. Создавайте невероятные механизмы!</p>
+              <div class="has-text-centered mt-4">
+                <a class="button is-primary" href="/servers/hitech">Узнать больше</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Server 2 - TechnoMagic -->
+        <div class="column is-6">
+          <div class="card server-card">
+            <div class="glow glow-1"></div>
+            <div class="glow glow-2"></div>
+            <div class="particles">
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+              <span class="particle"></span>
+            </div>
+            <div class="card-content">
+              <div class="tags mb-3">
+                <span class="tag is-danger">Магия</span>
+                <span class="tag is-link">PvP</span>
+              </div>
+              <p class="title is-4 has-text-centered mb-3">TechnoMagic</p>
+              <div class="has-text-centered mb-4">
+                <figure class="image is-64x64 is-inline-block">
+                  <img src="https://via.placeholder.com/64/a371f7/0d1117?text=TM" alt="TechnoMagic" style="border-radius: 12px;">
+                </figure>
+              </div>
+              <p class="subtitle is-6">Сочетание технологий и магии. Исследуйте измерения, изучайте заклинания и стройте магические contraptions!</p>
+              <div class="has-text-centered mt-4">
+                <a class="button is-primary" href="/servers/technomagic">Узнать больше</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News -->
+  <section class="section">
+    <div class="container">
+      <h2 class="title is-3 has-text-centered mb-6">Новости проекта</h2>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/58a6ff?text=1" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Обновление 2.5</p>
+                  <p class="subtitle is-7">15.02.2026</p>
+                  <p class="subtitle is-6">Новые измерения и магические заклинания уже на серверах!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/a371f7?text=2" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Ивент: Зимний фестиваль</p>
+                  <p class="subtitle is-7">10.02.2026</p>
+                  <p class="subtitle is-6">Участвуйте в зимнем фестивале и получайте эксклюзивные награды!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/3fb950?text=3" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Новый сервер Survival+</p>
+                  <p class="subtitle is-7">05.02.2026</p>
+                  <p class="subtitle is-6">Запущен новый ванильный сервер с улучшенным выживанием.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/d29922?text=4" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Баланс модов</p>
+                  <p class="subtitle is-7">01.02.2026</p>
+                  <p class="subtitle is-6">Обновлён баланс магических и технологических модов.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/58a6ff?text=5" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Соревнования PvP</p>
+                  <p class="subtitle is-7">28.01.2026</p>
+                  <p class="subtitle is-6">Турнир по PvP на сервере TechnoMagic. Призы — донат-валюта!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/a371f7?text=6" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Релиз мода Dimensions</p>
+                  <p class="subtitle is-7">25.01.2026</p>
+                  <p class="subtitle is-6">Добавлен мод с 5 новыми измерениями для исследования.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/3fb950?text=7" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Режим Creative</p>
+                  <p class="subtitle is-7">20.01.2026</p>
+                  <p class="subtitle is-6">На HiTech добавлен творческий режим для строителей.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/d29922?text=8" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Партнёрская программа</p>
+                  <p class="subtitle is-7">15.01.2026</p>
+                  <p class="subtitle is-6">Приводите друзей и получайте бонусы на баланс!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/58a6ff?text=9" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Новый лаунчер</p>
+                  <p class="subtitle is-7">10.01.2026</p>
+                  <p class="subtitle is-6">Обновлён лаунчер: быстрая установка, автопатчи.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column is-6">
+          <div class="card">
+            <div class="card-content">
+              <div class="news-card">
+                <img class="news-image" src="https://via.placeholder.com/120x80/21262d/a371f7?text=10" alt="">
+                <div>
+                  <p class="has-text-weight-semibold">Праздничный ивент</p>
+                  <p class="subtitle is-7">01.01.2026</p>
+                  <p class="subtitle is-6">Новогодний ивент с подарками для всех игроков!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="has-text-centered mt-5">
+        <a class="button is-primary" href="/news">Показать больше</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section section-dark">
+    <div class="container has-text-centered">
+      <h2 class="title is-3 mb-4">Начните своё приключение</h2>
+      <p class="subtitle is-5 mb-5">Отправьтесь в свой неповторимый путь на наших серверах</p>
+      <a class="button is-primary is-large" href="/play">Играть бесплатно</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column">
+          <p class="mb-2"><strong>ChibiCraft</strong></p>
+          <div class="tags">
+            <a class="tag" href="/">Главная</a>
+            <a class="tag" href="/servers">Серверы</a>
+            <a class="tag" href="/shop">Магазин</a>
+            <a class="tag" href="/news">Новости</a>
+            <a class="tag" href="/rules">Правила</a>
+          </div>
+        </div>
+        <div class="column has-text-right">
+          <span class="icon-text mx-2"><a href="#" class="has-text-white"><i class="fab fa-vk fa-lg"></i></a></span>
+          <span class="icon-text mx-2"><a href="#" class="has-text-white"><i class="fab fa-telegram fa-lg"></i></a></span>
+          <span class="icon-text mx-2"><a href="#" class="has-text-white"><i class="fab fa-discord fa-lg"></i></a></span>
+          <span class="icon-text mx-2"><a href="#" class="has-text-white"><i class="fab fa-youtube fa-lg"></i></a></span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Post-footer -->
+  <div class="post-footer py-4">
+    <div class="container">
+      <div class="has-text-centered">
+        <a href="/offer" class="button is-small is-text" style="color: var(--cc-text-muted);">Публичная оферта</a>
+        <a href="/privacy" class="button is-small is-text" style="color: var(--cc-text-muted);">Политика конфиденциальности</a>
+        <a href="/rules" class="button is-small is-text" style="color: var(--cc-text-muted);">Правила</a>
+        <p class="mt-2">© ChibiCraft 2023-2026. Все права защищены.</p>
+        <p class="is-size-7">Not official Minecraft product. Not approved by or associated with Mojang Synergies AB.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const profilePanel = document.getElementById('profileMobilePanel');
+      const profileBtn = document.getElementById('profileMobileBtn');
+      const profilePanelClose = document.getElementById('profilePanelClose');
+      const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;
+      let scrollY = 0;
+
+      const closeProfilePanel = () => {
+        if (!profilePanel?.classList.contains('is-active')) return;
+        profilePanel.classList.remove('is-active');
+        profilePanel.setAttribute('aria-hidden', 'true');
+        if (profileBtn) profileBtn.setAttribute('aria-expanded', 'false');
+        document.documentElement.classList.remove('profile-panel-open');
+        document.body.classList.remove('profile-panel-open');
+        document.body.style.top = '';
+        window.scrollTo(0, scrollY);
+      };
+      const openProfilePanel = () => {
+        scrollY = window.scrollY;
+        document.documentElement.classList.add('profile-panel-open');
+        document.body.classList.add('profile-panel-open');
+        document.body.style.top = `-${scrollY}px`;
+        profilePanel.classList.add('is-active');
+        profilePanel.setAttribute('aria-hidden', 'false');
+        if (profileBtn) profileBtn.setAttribute('aria-expanded', 'true');
+      };
+      // Профиль (десктоп): клик фиксирует/открепляет dropdown; hover показывает когда откреплён
+      const profileDropdownEl = document.getElementById('profileDropdown');
+      const profileDropdownTrigger = document.getElementById('profileDropdownTrigger');
+      if (profileDropdownTrigger && profileDropdownEl) {
+        profileDropdownTrigger.addEventListener('click', (e) => {
+          if (!window.matchMedia('(min-width: 1024px)').matches) return;
+          e.preventDefault();
+          profileDropdownEl.classList.toggle('is-active');
+        });
+      }
+
+      // Основное меню (главы) — по стандарту Bulma
+      document.querySelectorAll('.navbar-burger').forEach((el) => {
+        el.addEventListener('click', () => {
+          const targetId = el.getAttribute('data-target');
+          const target = targetId ? document.getElementById(targetId) : null;
+          if (target) {
+            el.classList.toggle('is-active');
+            el.setAttribute('aria-expanded', el.classList.contains('is-active'));
+            target.classList.toggle('is-active');
+            closeProfilePanel();
+          }
+        });
+      });
+
+      if (profileBtn && profilePanel) {
+        profileBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (isDesktop()) return;
+          openProfilePanel();
+        });
+      }
+      if (profilePanelClose && profilePanel) {
+        profilePanelClose.addEventListener('click', closeProfilePanel);
+      }
+      profilePanel?.querySelectorAll('a').forEach((a) => {
+        a.addEventListener('click', closeProfilePanel);
+      });
+      window.addEventListener('resize', () => {
+        if (isDesktop() && profilePanel?.classList.contains('is-active')) {
+          closeProfilePanel();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
