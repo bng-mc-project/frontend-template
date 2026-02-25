@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Донат — ChibiCraft</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles/css/light.css">
+</head>
+<body>
+  <div id="app">
+  <header class="nav">
+    <div class="nav__brand">
+      <a class="nav__logo" href="/">ChibiCraft</a>
+      <a href="#" class="nav__toggle hide-desk" aria-label="Меню" :aria-expanded="menuOpen" @click.prevent="toggleMenu"><i class="fa-solid fa-bars"></i></a>
+      <a href="#" class="nav__toggle nav__toggle--profile hide-desk" aria-label="Профиль" @click.prevent="openProfile"><img class="nav__avatar-mini" src="user_avatar.webp" alt=""><i class="fa-solid fa-user nav__avatar-fallback"></i></a>
+    </div>
+    <div class="nav__wrap">
+      <nav id="navMenu" class="nav" :class="{ 'is-active': menuOpen }">
+        <div class="nav__glass">
+          <div class="nav__menu nav__menu--start">
+            <a class="nav__link" href="/">Главная</a>
+            <a class="nav__link" href="/servers.html">Серверы</a>
+            <a class="nav__link nav__link--donate" href="/donate.html">ДОНАТ</a>
+            <div class="nav__dropdown nav__dropdown--other" :class="{ 'is-active': otherDropdownOpen }">
+              <button type="button" class="nav__link" @click.prevent="toggleOtherDropdown">Прочее</button>
+              <div class="nav__dropdown-menu nav__dropdown-other">
+                <div class="dropdown-other-inner">
+                <div class="nav__dropdown-group">
+                  <span class="nav__dropdown-label">Основное</span>
+                  <a href="/play">Начать игру</a>
+                  <a href="/register">Регистрация</a>
+                  <a href="/support">Тех. поддержка</a>
+                </div>
+                <div class="nav__dropdown-group">
+                  <span class="nav__dropdown-label">Наши соцсети</span>
+                  <a href="#">Вконтакте</a>
+                  <a href="#">Discord</a>
+                  <a href="#">YouTube</a>
+                  <a href="#">Telegram</a>
+                </div>
+                <div class="nav__dropdown-group">
+                  <span class="nav__dropdown-label">Активность</span>
+                  <a href="/bonuses">Бонусы</a>
+                  <a href="/invite">Пригласить друзей</a>
+                  <a href="/tops">Топы игроков</a>
+                </div>
+                <div class="nav__dropdown-group">
+                  <span class="nav__dropdown-label">Другое</span>
+                  <a href="/rules">Правила</a>
+                  <a href="/team">Команда проекта</a>
+                  <a href="/players">Поиск по игрокам</a>
+                  <a href="/banlist">Банлист</a>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="nav__menu">
+            <div class="nav__dropdown hide-mob" :class="{ 'is-active': profileDropdownOpen }">
+              <a href="/profile" class="nav__link nav__link--profile" @click.prevent="toggleProfileDropdown"><img class="nav__avatar-mini" src="user_avatar.webp" alt=""><span>Профиль</span></a>
+              <div class="nav__dropdown-menu">
+                <div class="profile-card">
+                  <div class="profile-card__row">
+                    <img class="profile-card__avatar" src="user_avatar.webp" alt="">
+                    <div>
+                      <p class="profile-card__name">PlayerName</p>
+                      <span class="tag tag--warn">VIP</span>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="profile-card__balance">
+                    <span class="subtitle">250 ₽</span>
+                    <a class="btn btn--primary btn--sm" href="/topup">Пополнить</a>
+                  </div>
+                  <div class="profile-card__balance">
+                    <span class="subtitle">1 500 монет</span>
+                    <a class="btn btn--outline btn--sm" href="/transfer">Перевести</a>
+                  </div>
+                  <hr>
+                  <a class="btn btn--primary" href="/shop/privileges">Купить привилегии</a>
+                  <a class="btn" href="/profile" style="background:var(--cc-darker);color:var(--cc-text);border:1px solid var(--cc-border);">Личный кабинет</a>
+                  <a class="btn btn--text" href="/logout">Выйти</a>
+                </div>
+              </div>
+            </div>
+            <a class="btn btn--primary hide-mob" href="/download">Скачать</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="profile-panel hide-mob" :class="{ 'is-active': profilePanelOpen }" :aria-hidden="!profilePanelOpen">
+    <div class="profile-panel__header">
+      <h2 class="mb-0">Профиль</h2>
+      <button type="button" class="profile-panel__close" aria-label="Закрыть" @click="closeProfile"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="profile-panel__content">
+      <div class="profile-card">
+        <div class="profile-card__row">
+          <img class="profile-card__avatar" src="https://via.placeholder.com/40/21262d/58a6ff?text=👤" alt="">
+          <div>
+            <p class="profile-card__name">PlayerName</p>
+            <span class="tag tag--warn">VIP</span>
+          </div>
+        </div>
+        <hr>
+        <div class="profile-card__balance">
+          <span class="subtitle">250 ₽</span>
+          <a class="btn btn--primary btn--sm" href="/topup" @click="closeProfile">Пополнить</a>
+        </div>
+        <div class="profile-card__balance">
+          <span class="subtitle">1 500 монет</span>
+          <a class="btn btn--outline btn--sm" href="/transfer" @click="closeProfile">Перевести</a>
+        </div>
+        <hr>
+        <a class="btn btn--primary" href="/shop/privileges" @click="closeProfile">Купить привилегии</a>
+        <a class="btn" href="/profile" style="background:var(--cc-darker);color:var(--cc-text);border:1px solid var(--cc-border);" @click="closeProfile">Личный кабинет</a>
+        <a class="btn btn--text" href="/logout" @click="closeProfile">Выйти</a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="section" style="padding-top: 6rem;">
+      <div class="container">
+        <div class="row donate-hero">
+          <div class="col donate-hero__text">
+            <h1 class="donate-hero__title">Покупка привилегий</h1>
+            <p class="donate-hero__subtitle">Купи привилегию и стань супер пупер чиби крутым</p>
+          </div>
+          <div class="col donate-hero__balance-wrap">
+            <div class="donate-balance">
+              <div class="donate-balance__row">
+                <span class="donate-balance__label">Ваш баланс</span>
+                <span class="donate-balance__sum">100 ₽</span>
+              </div>
+              <div class="donate-balance__actions">
+                <span class="donate-balance__bonus">До +50% от пополнения в зависимости от суммы</span>
+                <a class="btn btn--primary" href="/topup">Пополнить</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section donate-carousel-section">
+      <div class="donate-carousel" ref="donateCarousel">
+        <div class="donate-carousel__track">
+          <button type="button" class="donate-card donate-card--vip" data-donate-id="vip" :class="{ 'donate-card--selected': selectedDonate === 'vip' }" @click="setSelectedDonate('vip')">
+            <div class="donate-card__img-wrap">
+              <img src="donat_img/vip.webp" alt="VIP" class="donate-card__img" loading="lazy" draggable="false">
+            </div>
+            <span class="donate-card__badge">VIP</span>
+            <span class="donate-card__price">99 ₽ / месяц</span>
+          </button>
+          <button type="button" class="donate-card donate-card--premium" data-donate-id="premium" :class="{ 'donate-card--selected': selectedDonate === 'premium' }" @click="setSelectedDonate('premium')">
+            <div class="donate-card__img-wrap">
+              <img src="donat_img/premium.webp" alt="PREMIUM" class="donate-card__img" loading="lazy" draggable="false">
+            </div>
+            <span class="donate-card__badge">PREMIUM</span>
+            <span class="donate-card__price">199 ₽ / месяц</span>
+          </button>
+          <button type="button" class="donate-card donate-card--deluxe" data-donate-id="deluxe" :class="{ 'donate-card--selected': selectedDonate === 'deluxe' }" @click="setSelectedDonate('deluxe')">
+            <div class="donate-card__img-wrap">
+              <img src="donat_img/deluxe.webp" alt="DELUXE" class="donate-card__img" loading="lazy" draggable="false">
+            </div>
+            <span class="donate-card__badge">DELUXE</span>
+            <span class="donate-card__price">299 ₽ / месяц</span>
+          </button>
+          <button type="button" class="donate-card donate-card--elite" data-donate-id="elite" :class="{ 'donate-card--selected': selectedDonate === 'elite' }" @click="setSelectedDonate('elite')">
+            <div class="donate-card__img-wrap">
+              <img src="donat_img/elite.webp" alt="ELITE" class="donate-card__img" loading="lazy" draggable="false">
+            </div>
+            <span class="donate-card__badge">ELITE</span>
+            <span class="donate-card__price">399 ₽ / месяц</span>
+          </button>
+          <button type="button" class="donate-card donate-card--legend" data-donate-id="legend" :class="{ 'donate-card--selected': selectedDonate === 'legend' }" @click="setSelectedDonate('legend')">
+            <div class="donate-card__img-wrap">
+              <img src="donat_img/legend.webp" alt="LEGEND" class="donate-card__img" loading="lazy" draggable="false">
+            </div>
+            <span class="donate-card__badge">LEGEND</span>
+            <span class="donate-card__price">499 ₽ / месяц</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__row">
+        <div>
+          <p class="mb-2"><strong>ChibiCraft</strong></p>
+          <div class="footer__links tags">
+            <a class="tag" href="/">Главная</a>
+            <a class="tag" href="/servers.html">Серверы</a>
+            <a class="tag" href="/donate.html">ДОНАТ</a>
+            <a class="tag" href="/rules">Правила</a>
+          </div>
+        </div>
+        <div class="footer__social">
+          <a href="#" aria-label="VK"><i class="fab fa-vk fa-lg"></i></a>
+          <a href="#" aria-label="Telegram"><i class="fab fa-telegram fa-lg"></i></a>
+          <a href="#" aria-label="Discord"><i class="fab fa-discord fa-lg"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube fa-lg"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="post-footer">
+    <div class="container">
+      <div class="post-footer__links">
+        <a href="/offer">Публичная оферта</a>
+        <a href="/privacy">Политика конфиденциальности</a>
+        <a href="/rules">Правила</a>
+      </div>
+      <p class="mt-2">© ChibiCraft 2023-2026. Все права защищены.</p>
+      <p style="font-size:0.75rem">Not official Minecraft product. Not approved by or associated with Mojang Synergies AB.</p>
+    </div>
+  </div>
+
+  </div><!-- #app -->
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="styles/js/app.js"></script>
+</body>
+</html>

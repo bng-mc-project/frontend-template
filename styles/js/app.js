@@ -7,7 +7,8 @@ createApp({
       profilePanelOpen: false,
       profileDropdownOpen: false,
       otherDropdownOpen: false,
-      scrollY: 0
+      scrollY: 0,
+      selectedDonate: 'vip'
     };
   },
   methods: {
@@ -43,6 +44,16 @@ createApp({
     toggleOtherDropdown(e) {
       e.preventDefault();
       this.otherDropdownOpen = !this.otherDropdownOpen;
+    },
+    setSelectedDonate(id) {
+      this.selectedDonate = id;
+      this.$nextTick(() => {
+        const root = document.getElementById('app');
+        const card = root && root.querySelector(`[data-donate-id="${id}"]`);
+        if (card) {
+          card.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+        }
+      });
     },
     async handleFormSubmit(event) {
       const form = event.target;
@@ -105,7 +116,10 @@ createApp({
       }
     };
     window.addEventListener('resize', onResize);
-    this.$el.addEventListener('submit', (e) => this.handleFormSubmit(e));
+    const appEl = document.getElementById('app');
+    if (appEl && appEl.addEventListener) {
+      appEl.addEventListener('submit', (e) => this.handleFormSubmit(e));
+    }
     document.addEventListener('click', (e) => {
       if (this.profileDropdownOpen && !e.target.closest('.nav__dropdown.hide-mob')) {
         this.profileDropdownOpen = false;
@@ -114,5 +128,52 @@ createApp({
         this.otherDropdownOpen = false;
       }
     });
+
+    // Перетаскивание карусели мышью при ширине экрана < 600px
+    const carousel = document.querySelector('.donate-carousel');
+    if (carousel) {
+      let dragStartX = 0, dragStartScroll = 0, isDragging = false, didDrag = false;
+      carousel.addEventListener('mousedown', (e) => {
+        if (window.innerWidth >= 600) return;
+        isDragging = true;
+        didDrag = false;
+        dragStartX = e.pageX;
+        dragStartScroll = carousel.scrollLeft;
+      });
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging || window.innerWidth >= 600) return;
+        const dx = e.pageX - dragStartX;
+        if (Math.abs(dx) > 5) didDrag = true;
+        carousel.scrollLeft = dragStartScroll - dx;
+      });
+      document.addEventListener('mouseup', () => {
+        if (isDragging && window.innerWidth < 600) {
+          const track = carousel.querySelector('.donate-carousel__track');
+          const cards = track && track.querySelectorAll('.donate-card');
+          if (cards && cards.length) {
+            const scrollLeft = carousel.scrollLeft;
+            let nearest = 0, minDist = Infinity;
+            for (let i = 0; i < cards.length; i++) {
+              const target = cards[i].offsetLeft;
+              const dist = Math.abs(target - scrollLeft);
+              if (dist < minDist) {
+                minDist = dist;
+                nearest = i;
+              }
+            }
+            const targetScroll = cards[nearest].offsetLeft;
+            carousel.scrollTo({ left: targetScroll, behavior: 'smooth' });
+          }
+        }
+        isDragging = false;
+      });
+      carousel.addEventListener('click', (e) => {
+        if (didDrag) {
+          e.preventDefault();
+          e.stopPropagation();
+          didDrag = false;
+        }
+      }, true);
+    }
   }
 }).mount('#app');

@@ -704,6 +704,212 @@ button.nav__link {
   margin-left: auto;
 }
 
+/* Donate page hero */
+.donate-hero {
+  align-items: center;
+  gap: 2rem;
+}
+
+.donate-hero__text {
+  text-align: left;
+}
+
+.donate-hero__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+}
+
+.donate-hero__subtitle {
+  margin: 0;
+  color: var(--cc-text-muted, #8b949e);
+  font-size: 1rem;
+}
+
+.donate-hero__balance-wrap {
+  flex: 0 0 auto;
+}
+
+.donate-balance {
+  background: var(--cc-card-bg);
+  border: 1px solid var(--cc-border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  min-width: 280px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.donate-balance__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.donate-balance__label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.donate-balance__sum {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cc-accent);
+}
+
+.donate-balance__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.donate-balance__bonus {
+  font-size: 0.8rem;
+  color: var(--cc-text-muted, #8b949e);
+  max-width: 220px;
+}
+
+/* Donate carousel */
+.donate-carousel-section {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+.donate-carousel {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 1rem 1rem;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  touch-action: pan-x;
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 599px) {
+  .donate-carousel {
+    cursor: grab;
+    user-select: none;
+  }
+  .donate-carousel:active {
+    cursor: grabbing;
+  }
+}
+
+.donate-carousel__track {
+  display: flex;
+  gap: 25px;
+  padding: 2rem 0 0.5rem;
+  min-width: min-content;
+}
+
+.donate-card {
+  flex: 0 0 256px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  padding: 0.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.donate-card:hover {
+  transform: translateY(-2px);
+}
+
+.donate-card__img-wrap {
+  width: 256px;
+  height: 256px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cc-darker);
+  transition: box-shadow 0.2s;
+}
+
+.donate-card--selected .donate-card__img-wrap {
+  box-shadow: 0 0 0 5px var(--donate-accent), 0 0 30px 8px var(--donate-accent);
+}
+
+.donate-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+.donate-card__badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.donate-card__price {
+  font-size: 1rem;
+  color: var(--cc-text-muted);
+  text-align: center;
+}
+
+.donate-card--vip {
+  --donate-accent: #e67e22;
+}
+
+.donate-card--vip .donate-card__badge {
+  background: rgba(230, 126, 34, 0.25);
+  color: #e67e22;
+}
+
+.donate-card--premium {
+  --donate-accent: #9b59b6;
+}
+
+.donate-card--premium .donate-card__badge {
+  background: rgba(155, 89, 182, 0.25);
+  color: #9b59b6;
+}
+
+.donate-card--deluxe {
+  --donate-accent: #e91e8c;
+}
+
+.donate-card--deluxe .donate-card__badge {
+  background: rgba(233, 30, 140, 0.25);
+  color: #e91e8c;
+}
+
+.donate-card--elite {
+  --donate-accent: #3498db;
+}
+
+.donate-card--elite .donate-card__badge {
+  background: rgba(52, 152, 219, 0.25);
+  color: #3498db;
+}
+
+.donate-card--legend {
+  --donate-accent: #e74c3c;
+}
+
+.donate-card--legend .donate-card__badge {
+  background: rgba(231, 76, 60, 0.25);
+  color: #e74c3c;
+}
+
 .server-card {
   position: relative;
 }

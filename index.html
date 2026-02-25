@@ -13,15 +13,15 @@
     <div class="nav__brand">
       <a class="nav__logo" href="/">ChibiCraft</a>
       <a href="#" class="nav__toggle hide-desk" aria-label="Меню" :aria-expanded="menuOpen" @click.prevent="toggleMenu"><i class="fa-solid fa-bars"></i></a>
-      <a href="#" class="nav__toggle nav__toggle--profile hide-desk" aria-label="Профиль" @click.prevent="openProfile"><img class="nav__avatar-mini" src="user_avatar.webp" alt=""><i class="fa-solid fa-user nav__avatar-fallback"></i></a>
+      <a href="#" class="nav__toggle hide-desk" aria-label="Профиль" @click.prevent="openProfile"><i class="fa-solid fa-user"></i></a>
     </div>
     <div class="nav__wrap">
       <nav id="navMenu" class="nav" :class="{ 'is-active': menuOpen }">
         <div class="nav__glass">
           <div class="nav__menu nav__menu--start">
             <a class="nav__link" href="/">Главная</a>
-            <a class="nav__link" href="/servers.html">Серверы</a>
-            <a class="nav__link nav__link--donate" href="/shop">Донат</a>
+            <a class="nav__link" href="/servers">Серверы</a>
+            <a class="nav__link nav__link--donate" href="/donate.html">ДОНАТ</a>
             <div class="nav__dropdown nav__dropdown--other" :class="{ 'is-active': otherDropdownOpen }">
               <button type="button" class="nav__link" @click.prevent="toggleOtherDropdown">Прочее</button>
               <div class="nav__dropdown-menu nav__dropdown-other">
@@ -58,7 +58,7 @@
           </div>
           <div class="nav__menu">
             <div class="nav__dropdown hide-mob" :class="{ 'is-active': profileDropdownOpen }">
-              <a href="/profile" class="nav__link nav__link--profile" @click.prevent="toggleProfileDropdown"><img class="nav__avatar-mini" src="user_avatar.webp" alt=""><span>Профиль</span></a>
+              <a href="/profile" class="nav__link" @click.prevent="toggleProfileDropdown">Профиль</a>
               <div class="nav__dropdown-menu">
                 <div class="profile-card">
                   <div class="profile-card__row">
@@ -132,7 +132,7 @@
         <div class="container">
           <div class="row row--vcenter">
             <div class="col col--half">
-              <h1 class="hero__title">Присоединяйся к нам</h1>
+              <h1 class="hero__title">Увлекательное<br>кубическое приключение</h1>
               <p class="hero__desc">ChibiCraft — это аниме-проект серверов с уникальными модами, где вас ждут путешествия по измерениям, технологии и магия!</p>
               <div class="badges">
                 <span class="badge badge--online">Онлайн: 247</span>
@@ -283,8 +283,8 @@
           <p class="mb-2"><strong>ChibiCraft</strong></p>
           <div class="footer__links tags">
             <a class="tag" href="/">Главная</a>
-            <a class="tag" href="/servers.html">Серверы</a>
-            <a class="tag" href="/shop">Донат</a>
+            <a class="tag" href="/servers">Серверы</a>
+            <a class="tag" href="/donate.html">ДОНАТ</a>
             <a class="tag" href="/rules">Правила</a>
           </div>
         </div>
