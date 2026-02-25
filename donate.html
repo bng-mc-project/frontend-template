@@ -99,7 +99,7 @@
     <div class="profile-panel__content">
       <div class="profile-card">
         <div class="profile-card__row">
-          <img class="profile-card__avatar" src="https://via.placeholder.com/40/21262d/58a6ff?text=👤" alt="">
+          <img class="profile-card__avatar" src="user_avatar.webp" alt="">
           <div>
             <p class="profile-card__name">PlayerName</p>
             <span class="tag tag--warn">VIP</span>
@@ -187,6 +187,135 @@
         </div>
       </div>
     </section>
+
+    <section class="section donate-combo-section">
+      <div class="container">
+        <p class="donate-combo__heading">
+          <i class="fas fa-chevron-down donate-combo__arrow" aria-hidden="true"></i>
+          Что идёт в комплекте с «{{ getPrivilegeLabel(selectedDonate) }}»
+        </p>
+        <div class="donate-combo__row">
+          <div class="donate-combo__badge-wrap">
+            <span class="donate-combo__privilege-badge" :class="'donate-combo__privilege-badge--' + selectedDonate">{{ getPrivilegeLabel(selectedDonate) }}</span>
+            <span class="donate-combo__kits">Киты</span>
+          </div>
+          <div class="donate-server-select" :class="{ 'is-open': serverDropdownOpen }">
+            <button type="button" class="donate-server-select__trigger" @click="toggleServerDropdown">
+              <img class="donate-server-select__logo" :src="donateServers[selectedServerIndex].logo" :alt="donateServers[selectedServerIndex].name">
+              <span class="donate-server-select__name">{{ donateServers[selectedServerIndex].name }}</span>
+              <i class="fas fa-chevron-down donate-server-select__icon" aria-hidden="true"></i>
+            </button>
+            <div class="donate-server-select__dropdown">
+              <button type="button" class="donate-server-select__option" v-for="(server, index) in donateServers" :key="index" @click="selectServer(index)">
+                <img class="donate-server-select__logo" :src="server.logo" :alt="server.name">
+                <span>{{ server.name }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section donate-kits-section">
+      <div class="container">
+        <div class="donate-kits-grid">
+          <div class="donate-kit-card" v-for="(kit, kitIndex) in donateKits" :key="kitIndex">
+            <div class="donate-kit-card__header">
+              <h3 class="donate-kit-card__title">Кит «{{ kit.name }}»</h3>
+              <span class="donate-kit-card__badge" :class="'donate-combo__privilege-badge--' + kit.privilege">{{ getPrivilegeLabel(kit.privilege) }}</span>
+            </div>
+            <p class="donate-kit-card__server">Для сервера {{ donateServers[selectedServerIndex].name }}</p>
+            <div class="donate-kit-card__items">
+              <div class="donate-kit-card__item" v-for="(count, idx) in kit.itemCounts" :key="idx">
+                <img src="grass_block.webp" alt="" class="donate-kit-card__item-img" loading="lazy">
+                <span class="donate-kit-card__item-count" v-if="count != null">{{ count }}</span>
+              </div>
+            </div>
+            <p class="donate-kit-card__cooldown">
+              <i class="fas fa-clock" aria-hidden="true"></i>
+              Можно получать каждые {{ kit.cooldownDays }} {{ kit.cooldownDays === 1 ? 'день' : kit.cooldownDays < 5 ? 'дня' : 'дней' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section donate-kits-extra-section">
+      <div class="container">
+        <p class="donate-kits-extra__intro">
+          А ещё с <span class="donate-kits-extra__badge" :class="'donate-combo__privilege-badge--' + selectedDonate">{{ getPrivilegeLabel(selectedDonate) }}</span> вы получите все предыдущие киты:
+        </p>
+        <div class="donate-kits-grid">
+          <div class="donate-kit-card" v-for="(kit, kitIndex) in donateKits" :key="'extra-' + kitIndex">
+            <div class="donate-kit-card__header">
+              <h3 class="donate-kit-card__title">Кит «{{ kit.name }}»</h3>
+              <span class="donate-kit-card__badge" :class="'donate-combo__privilege-badge--' + kit.privilege">{{ getPrivilegeLabel(kit.privilege) }}</span>
+            </div>
+            <p class="donate-kit-card__server">Для сервера {{ donateServers[selectedServerIndex].name }}</p>
+            <div class="donate-kit-card__items">
+              <div class="donate-kit-card__item" v-for="(count, idx) in kit.itemCounts" :key="idx">
+                <img src="grass_block.webp" alt="" class="donate-kit-card__item-img" loading="lazy">
+                <span class="donate-kit-card__item-count" v-if="count != null">{{ count }}</span>
+              </div>
+            </div>
+            <p class="donate-kit-card__cooldown">
+              <i class="fas fa-clock" aria-hidden="true"></i>
+              Можно получать каждые {{ kit.cooldownDays }} {{ kit.cooldownDays === 1 ? 'день' : kit.cooldownDays < 5 ? 'дня' : 'дней' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section donate-features-section">
+      <div class="container">
+        <div class="donate-features__heading">
+          <span class="donate-features__badge" :class="'donate-features__badge--' + selectedDonate">{{ getPrivilegeLabel(selectedDonate) }}</span>
+          <span class="donate-features__title">Возможности</span>
+        </div>
+        <div class="donate-features__grid">
+          <div class="donate-features__row" v-for="(item, idx) in donateFeatures" :key="idx">
+            <div class="donate-features__label-wrap">
+              <span class="donate-features__label">{{ item.label }}</span>
+              <span class="donate-features__sublabel" v-if="item.sublabel">{{ item.sublabel }}</span>
+            </div>
+            <span class="donate-features__value" v-if="item.value">{{ item.value }}</span>
+            <span class="donate-features__check" v-else-if="item.check" aria-hidden="true">
+              <i class="fas fa-check"></i>
+            </span>
+          </div>
+        </div>
+        <p class="donate-disclaimer">
+          Привилегия приобретается отдельно на каждом сервере.<br>
+          1 месяц равняется 31 дню.
+        </p>
+      </div>
+    </section>
+
+    <div class="donate-purchase-bar">
+      <div class="container donate-purchase-bar__inner">
+        <span class="donate-purchase-bar__badge" :class="'donate-combo__privilege-badge--' + selectedDonate">{{ getPrivilegeLabel(selectedDonate) }}</span>
+        <div class="donate-purchase-bar__switch" role="radiogroup" aria-label="Срок привилегии">
+          <label class="donate-purchase-bar__option">
+            <input type="radio" name="donatePeriod" value="1" v-model="selectedPeriod">
+            <span class="donate-purchase-bar__option-text">На 1 месяц</span>
+          </label>
+          <label class="donate-purchase-bar__option">
+            <input type="radio" name="donatePeriod" value="3" v-model="selectedPeriod">
+            <span class="donate-purchase-bar__option-text">На 3 месяца</span>
+            <span class="donate-purchase-bar__discount">-30%</span>
+          </label>
+          <label class="donate-purchase-bar__option">
+            <input type="radio" name="donatePeriod" value="forever" v-model="selectedPeriod">
+            <span class="donate-purchase-bar__option-text donate-purchase-bar__option-text--gradient">Навсегда</span>
+          </label>
+        </div>
+        <div class="donate-purchase-bar__right">
+          <span class="donate-purchase-bar__price">{{ donateCurrentPrice }} ₽</span>
+          <a class="btn btn--primary" href="/buy">Купить</a>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer class="footer">

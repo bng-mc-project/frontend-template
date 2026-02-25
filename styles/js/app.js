@@ -8,8 +8,46 @@ createApp({
       profileDropdownOpen: false,
       otherDropdownOpen: false,
       scrollY: 0,
-      selectedDonate: 'vip'
+      selectedDonate: 'vip',
+      donateServers: [
+        { name: 'HiTech', logo: 'hitech_server.webp' },
+        { name: 'TechnoMagic', logo: 'hitech_server.webp' }
+      ],
+      selectedServerIndex: 0,
+      serverDropdownOpen: false,
+      donateKits: [
+        {
+          name: 'Industrial',
+          privilege: 'vip',
+          cooldownDays: 7,
+          itemCounts: [16, 8, 4, null, null, 1, 32, null, null, 64, null, 2, null, null, 8, 4, null, 16, null, null, null, 1, 32, 64, null, 8, null, null, 4, null, 2, 16, null, null, 1, null]
+        },
+        {
+          name: 'Магический',
+          privilege: 'premium',
+          cooldownDays: 1,
+          itemCounts: [null, 4, null, 8, 16, null, null, 2, 1, null, 32, null, null, 64, null, 4, 8, null, null, 1, null, 16, null, null, 2, null, 32, 64, null, null, 8, null, 4, null, 1, null]
+        }
+      ],
+      donateFeatures: [
+        { label: 'Кол-во приватов', value: '10' },
+        { label: 'Сохранение брони при смерти', check: true },
+        { label: 'Домашняя точка', value: '3' },
+        { label: 'Участие в аукционе', check: true },
+        { label: 'Приват в чате', value: '50 блоков' },
+        { label: 'Цветной ник в чате', check: true },
+        { label: 'Команда /fly', sublabel: 'Возможность полёта', check: true },
+        { label: 'Команда /heal', sublabel: 'Восстановление здоровья', check: true },
+        { label: 'Команда /feed', sublabel: 'Восстановление голода', check: true }
+      ],
+      selectedPeriod: '1',
+      donatePeriodPrices: { '1': 99, '3': 209, 'forever': 499 }
     };
+  },
+  computed: {
+    donateCurrentPrice() {
+      return this.donatePeriodPrices[this.selectedPeriod] || 99;
+    }
   },
   methods: {
     isDesktop() {
@@ -54,6 +92,18 @@ createApp({
           card.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
         }
       });
+    },
+    getPrivilegeLabel(id) {
+      const labels = { vip: 'VIP', premium: 'PREMIUM', deluxe: 'DELUXE', elite: 'ELITE', legend: 'LEGEND' };
+      return labels[id] || id.toUpperCase();
+    },
+    selectServer(index) {
+      this.selectedServerIndex = index;
+      this.serverDropdownOpen = false;
+    },
+    toggleServerDropdown(e) {
+      e.preventDefault();
+      this.serverDropdownOpen = !this.serverDropdownOpen;
     },
     async handleFormSubmit(event) {
       const form = event.target;
@@ -126,6 +176,9 @@ createApp({
       }
       if (this.otherDropdownOpen && !e.target.closest('.nav__dropdown--other')) {
         this.otherDropdownOpen = false;
+      }
+      if (this.serverDropdownOpen && !e.target.closest('.donate-server-select')) {
+        this.serverDropdownOpen = false;
       }
     });
 
