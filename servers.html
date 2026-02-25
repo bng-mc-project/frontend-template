@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ChibiCraft — Увлекательное кубическое приключение</title>
+  <title>ChibiCraft — Серверы</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
   <link rel="stylesheet" href="styles/css/light.css">
 </head>
@@ -11,7 +11,7 @@
   <div id="app">
   <header class="nav">
     <div class="nav__brand">
-      <a class="nav__logo" href="/">ChibiCraft</a>
+      <a class="nav__logo" href="index.html">ChibiCraft</a>
       <a href="#" class="nav__toggle hide-desk" aria-label="Меню" :aria-expanded="menuOpen" @click.prevent="toggleMenu"><i class="fa-solid fa-bars"></i></a>
       <a href="#" class="nav__toggle nav__toggle--profile hide-desk" aria-label="Профиль" @click.prevent="openProfile"><img class="nav__avatar-mini" src="user_avatar.webp" alt=""><i class="fa-solid fa-user nav__avatar-fallback"></i></a>
     </div>
@@ -19,8 +19,8 @@
       <nav id="navMenu" class="nav" :class="{ 'is-active': menuOpen }">
         <div class="nav__glass">
           <div class="nav__menu nav__menu--start">
-            <a class="nav__link" href="/">Главная</a>
-            <a class="nav__link" href="/servers.html">Серверы</a>
+            <a class="nav__link" href="index.html">Главная</a>
+            <a class="nav__link" href="servers.html">Серверы</a>
             <a class="nav__link nav__link--donate" href="/shop">Донат</a>
             <div class="nav__dropdown nav__dropdown--other" :class="{ 'is-active': otherDropdownOpen }">
               <button type="button" class="nav__link" @click.prevent="toggleOtherDropdown">Прочее</button>
@@ -123,157 +123,50 @@
   </div>
 
   <main>
-    <section class="hero">
-      <div class="hero__bg">
-        <img src="фон.png" alt="ChibiCraft фон" loading="eager">
-      </div>
-      <div class="hero__overlay"></div>
-      <div class="hero__body">
-        <div class="container">
-          <div class="row row--vcenter">
-            <div class="col col--half">
-              <h1 class="hero__title">Присоединяйся к нам</h1>
-              <p class="hero__desc">ChibiCraft — это аниме-проект серверов с уникальными модами, где вас ждут путешествия по измерениям, технологии и магия!</p>
-              <div class="badges">
-                <span class="badge badge--online">Онлайн: 247</span>
-                <span class="badge badge--tps">TPS: 20</span>
-              </div>
-            </div>
-            <div class="col text-center">
-              <a class="btn--start" href="/play"><i class="fas fa-gamepad"></i> Начать игру</a>
-            </div>
-            <div class="col col--half">
-              <div class="panel">
-                <p class="mb-2" style="font-weight:600">Последнее обновление</p>
-                <p class="subtitle mb-3">Новый сервер Hi-Tech: новые измерения и магические заклинания уже на серверах!</p>
-                <a class="btn btn--outline" href="/news">Читать новость</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--dark">
+    <section class="section section--dark section--servers" style="padding-top: 6rem;">
       <div class="container">
-        <h2 class="text-center mb-6">Самые популярные серверы</h2>
-        <div class="row">
-          <div class="col col--half">
-            <div class="card server-card">
-              <div class="glow glow-1"></div>
-              <div class="glow glow-2"></div>
-              <span class="particle"></span><span class="particle"></span><span class="particle"></span>
-              <span class="particle"></span><span class="particle"></span><span class="particle"></span>
-              <div class="card__body">
-                <div class="tags mb-3">
+        <header class="servers-header">
+          <h1 class="servers-header__title">Наши серверы</h1>
+          <p class="servers-header__desc">Мы создаем неповторимые серверы с уникальной атмосферой, модами и механиками — присоединяйтесь и найдите свой мир.</p>
+          <div class="servers-badges">
+            <span class="badge badge--online">Текущий онлайн: 127</span>
+            <span class="badge badge--tps">Дневной рекорд: 89</span>
+            <span class="badge badge--record">Абсолютный рекорд: 156</span>
+          </div>
+        </header>
+
+        <div class="servers-grid">
+          <a href="/servers/hitech" class="server-card-link">
+            <div class="server-card server-card--bg">
+              <div class="server-card__overlay"></div>
+              <div class="server-card__content">
+                <div class="server-card__tags tags">
                   <span class="tag tag--info">Моды</span>
                   <span class="tag tag--success">Технологии</span>
-                  <span class="tag tag--warn">1.20</span>
                 </div>
-                <p class="text-center mb-3"><strong>HiTech</strong></p>
-                <div class="text-center mb-4">
-                  <img src="hitech_server.webp" alt="HiTech" width="64" height="64" style="border-radius:12px">
-                </div>
-                <p class="subtitle mb-4">Сервер с продвинутыми технологиями: автоматизация, роботы, космические станции. Создавайте невероятные механизмы!</p>
-                <div class="text-center mt-4">
-                  <a class="btn btn--primary" href="/servers/hitech">Узнать больше</a>
-                </div>
+                <img class="server-card__logo" src="hitech_server.webp" alt="HiTech" width="64" height="64">
+                <h3 class="server-card__name">HiTech</h3>
+                <span class="badge badge--online">Онлайн: 42</span>
               </div>
             </div>
-          </div>
-          <div class="col col--half">
-            <div class="card server-card">
-              <div class="glow glow-1"></div>
-              <div class="glow glow-2"></div>
-              <span class="particle"></span><span class="particle"></span><span class="particle"></span>
-              <span class="particle"></span><span class="particle"></span><span class="particle"></span>
-              <div class="card__body">
-                <div class="tags mb-3">
+          </a>
+          <a href="/servers/technomagic" class="server-card-link">
+            <div class="server-card server-card--bg">
+              <div class="server-card__overlay"></div>
+              <div class="server-card__content">
+                <div class="server-card__tags tags">
                   <span class="tag tag--danger">Магия</span>
                   <span class="tag tag--link">PvP</span>
                 </div>
-                <p class="text-center mb-3"><strong>TechnoMagic</strong></p>
-                <div class="text-center mb-4">
-                  <img src="hitech_server.webp" alt="TechnoMagic" width="64" height="64" style="border-radius:12px">
-                </div>
-                <p class="subtitle mb-4">Сочетание технологий и магии. Исследуйте измерения, изучайте заклинания и стройте магические contraptions!</p>
-                <div class="text-center mt-4">
-                  <a class="btn btn--primary" href="/servers/technomagic">Узнать больше</a>
-                </div>
+                <img class="server-card__logo" src="hitech_server.webp" alt="TechnoMagic" width="64" height="64">
+                <h3 class="server-card__name">TechnoMagic</h3>
+                <span class="badge badge--online">Онлайн: 85</span>
               </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </section>
-
-    <section class="section">
-      <div class="container">
-        <h2 class="text-center mb-6">Новости проекта</h2>
-        <div class="row">
-          <div class="col col--half">
-            <div class="card">
-              <div class="card__body">
-                <div class="news-card">
-                  <img class="news-card__img" src="news_example.webp" alt="">
-                  <div class="news-card__body">
-                    <p><strong>Обновление 2.5</strong></p>
-                    <p class="subtitle--xs">15.02.2026</p>
-                    <p class="subtitle">Новые измерения и магические заклинания уже на серверах!</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col col--half">
-            <div class="card">
-              <div class="card__body">
-                <div class="news-card">
-                  <img class="news-card__img" src="news_example.webp" alt="">
-                  <div class="news-card__body">
-                    <p><strong>Ивент: Зимний фестиваль</strong></p>
-                    <p class="subtitle--xs">10.02.2026</p>
-                    <p class="subtitle">Участвуйте в зимнем фестивале и получайте эксклюзивные награды!</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col col--half">
-            <div class="card">
-              <div class="card__body">
-                <div class="news-card">
-                  <img class="news-card__img" src="news_example.webp" alt="">
-                  <div class="news-card__body">
-                    <p><strong>Новый сервер Survival+</strong></p>
-                    <p class="subtitle--xs">05.02.2026</p>
-                    <p class="subtitle">Запущен новый ванильный сервер с улучшенным выживанием.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col col--half">
-            <div class="card">
-              <div class="card__body">
-                <div class="news-card">
-                  <img class="news-card__img" src="news_example.webp" alt="">
-                  <div class="news-card__body">
-                    <p><strong>Баланс модов</strong></p>
-                    <p class="subtitle--xs">01.02.2026</p>
-                    <p class="subtitle">Обновлён баланс магических и технологических модов.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="text-center mt-5">
-          <a class="btn btn--primary" href="/news">Показать больше</a>
-        </div>
-      </div>
-    </section>
-  
   </main>
 
   <footer class="footer">
@@ -282,8 +175,8 @@
         <div>
           <p class="mb-2"><strong>ChibiCraft</strong></p>
           <div class="footer__links tags">
-            <a class="tag" href="/">Главная</a>
-            <a class="tag" href="/servers.html">Серверы</a>
+            <a class="tag" href="index.html">Главная</a>
+            <a class="tag" href="servers.html">Серверы</a>
             <a class="tag" href="/shop">Донат</a>
             <a class="tag" href="/rules">Правила</a>
           </div>
