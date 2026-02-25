@@ -771,6 +771,56 @@ button.nav__link {
   max-width: 220px;
 }
 
+@media (max-width: 599px) {
+  .donate-hero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+
+  .donate-hero__balance-wrap {
+    width: 100%;
+  }
+
+  .donate-balance {
+    min-width: 0;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    box-sizing: border-box;
+  }
+
+  .donate-balance__row {
+    margin-bottom: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .donate-balance__label {
+    font-size: 0.9rem;
+  }
+
+  .donate-balance__sum {
+    font-size: 1.25rem;
+  }
+
+  .donate-balance__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .donate-balance__bonus {
+    max-width: none;
+    font-size: 0.75rem;
+    order: 1;
+  }
+
+  .donate-balance__actions .btn {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Donate carousel */
 .donate-carousel-section {
   padding-top: 0;
@@ -783,8 +833,14 @@ button.nav__link {
   padding: 0 1rem 1rem;
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
-  touch-action: pan-x;
+  touch-action: pan-y pan-x;
   scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.donate-carousel::-webkit-scrollbar {
+  display: none;
 }
 
 @media (max-width: 599px) {
@@ -794,6 +850,31 @@ button.nav__link {
   }
   .donate-carousel:active {
     cursor: grabbing;
+  }
+  .donate-carousel__track {
+    gap: 16px;
+    padding-top: 1.5rem;
+  }
+  .donate-card {
+    flex: 0 0 140px;
+    padding: 0.25rem;
+  }
+  .donate-card__img-wrap {
+    width: 140px;
+    height: 140px;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+  }
+  .donate-card--selected .donate-card__img-wrap {
+    box-shadow: 0 0 0 3px var(--donate-accent), 0 0 20px 6px var(--donate-accent);
+  }
+  .donate-card__badge {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+  .donate-card__price {
+    font-size: 0.8rem;
   }
 }
 
