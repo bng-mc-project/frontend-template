@@ -41,12 +41,21 @@ createApp({
         { label: 'Команда /feed', sublabel: 'Восстановление голода', check: true }
       ],
       selectedPeriod: '1',
-      donatePeriodPrices: { '1': 99, '3': 209, 'forever': 499 }
+      donatePeriodPrices: { '1': 99, '3': 209, 'forever': 499 },
+      donatePeriodOptions: [
+        { value: '1', label: 'На 1 мес' },
+        { value: '3', label: 'На 3 мес', discount: '-30%' },
+        { value: 'forever', label: 'Навсегда', gradient: true }
+      ],
+      periodDropdownOpen: false
     };
   },
   computed: {
     donateCurrentPrice() {
       return this.donatePeriodPrices[this.selectedPeriod] || 99;
+    },
+    selectedPeriodOption() {
+      return this.donatePeriodOptions.find(o => o.value === this.selectedPeriod) || this.donatePeriodOptions[0];
     }
   },
   methods: {
@@ -104,6 +113,14 @@ createApp({
     toggleServerDropdown(e) {
       e.preventDefault();
       this.serverDropdownOpen = !this.serverDropdownOpen;
+    },
+    togglePeriodDropdown(e) {
+      e.preventDefault();
+      this.periodDropdownOpen = !this.periodDropdownOpen;
+    },
+    selectPeriod(value) {
+      this.selectedPeriod = value;
+      this.periodDropdownOpen = false;
     },
     async handleFormSubmit(event) {
       const form = event.target;
@@ -179,6 +196,9 @@ createApp({
       }
       if (this.serverDropdownOpen && !e.target.closest('.donate-server-select')) {
         this.serverDropdownOpen = false;
+      }
+      if (this.periodDropdownOpen && !e.target.closest('.donate-period-select')) {
+        this.periodDropdownOpen = false;
       }
     });
 

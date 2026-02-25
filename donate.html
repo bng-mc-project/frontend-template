@@ -295,6 +295,19 @@
     <div class="donate-purchase-bar">
       <div class="container donate-purchase-bar__inner">
         <span class="donate-purchase-bar__badge" :class="'donate-combo__privilege-badge--' + selectedDonate">{{ getPrivilegeLabel(selectedDonate) }}</span>
+        <div class="donate-period-select donate-purchase-bar__select" :class="{ 'is-open': periodDropdownOpen }">
+          <button type="button" class="donate-period-select__trigger" @click="togglePeriodDropdown" :aria-expanded="periodDropdownOpen" aria-label="Срок привилегии">
+            <span class="donate-period-select__label" :class="{ 'donate-period-select__label--gradient': selectedPeriodOption.gradient }">{{ selectedPeriodOption.label }}</span>
+            <span class="donate-period-select__discount" v-if="selectedPeriodOption.discount">{{ selectedPeriodOption.discount }}</span>
+            <i class="fas fa-chevron-down donate-period-select__icon" aria-hidden="true"></i>
+          </button>
+          <div class="donate-period-select__dropdown">
+            <button type="button" class="donate-period-select__option" v-for="opt in donatePeriodOptions" :key="opt.value" @click="selectPeriod(opt.value)" :class="{ 'donate-period-select__option--gradient': opt.gradient }">
+              <span>{{ opt.label }}</span>
+              <span class="donate-period-select__option-discount" v-if="opt.discount">{{ opt.discount }}</span>
+            </button>
+          </div>
+        </div>
         <div class="donate-purchase-bar__switch" role="radiogroup" aria-label="Срок привилегии">
           <label class="donate-purchase-bar__option">
             <input type="radio" name="donatePeriod" value="1" v-model="selectedPeriod">
